@@ -1,0 +1,1448 @@
+<h1 id="overview">Overview</h1>
+<p>GatewayScript is an extensible programming model on top of the familiar and friendly ECMAScript
+(JavaScript) programming language. The GatewayScript feature has been architected to provide simple
+access to all aspects of a network transaction. Never has it been easier to interrogate and
+manipulate the contents of requests and responses.</p>
+<p>The feature revolves around the GatewayScript Action. The GatewayScript Action simply contains the
+GatewayScript file. When the GatewayScript Action executes, the file is retrieved, compiled, and
+executed. The generated object code is then cached for future executions.</p>
+<h1 id="assert">Assert</h1>
+<p>This module is used for writing unit tests for your applications, you can
+access it with <code>require(&#39;assert&#39;)</code>.</p>
+<h2 id="assert-fail-actual-expected-message-operator-">assert.fail(actual, expected, message, operator)</h2>
+<p>Throws an exception that displays the values for <code>actual</code> and <code>expected</code> separated by the provided operator.</p>
+<h2 id="assert-value-message-assert-ok-value-message-">assert(value, message), assert.ok(value, [message])</h2>
+<p>Tests if value is truthy, it is equivalent to <code>assert.equal(true, !!value, message);</code></p>
+<h2 id="assert-equal-actual-expected-message-">assert.equal(actual, expected, [message])</h2>
+<p>Tests shallow, coercive equality with the equal comparison operator ( <code>==</code> ).</p>
+<h2 id="assert-notequal-actual-expected-message-">assert.notEqual(actual, expected, [message])</h2>
+<p>Tests shallow, coercive non-equality with the not equal comparison operator ( <code>!=</code> ).</p>
+<h2 id="assert-deepequal-actual-expected-message-">assert.deepEqual(actual, expected, [message])</h2>
+<p>Tests for deep equality.</p>
+<h2 id="assert-notdeepequal-actual-expected-message-">assert.notDeepEqual(actual, expected, [message])</h2>
+<p>Tests for any deep inequality.</p>
+<h2 id="assert-strictequal-actual-expected-message-">assert.strictEqual(actual, expected, [message])</h2>
+<p>Tests strict equality, as determined by the strict equality operator ( <code>===</code> )</p>
+<h2 id="assert-notstrictequal-actual-expected-message-">assert.notStrictEqual(actual, expected, [message])</h2>
+<p>Tests strict non-equality, as determined by the strict not equal operator ( <code>!==</code> )</p>
+<h2 id="assert-throws-block-error-message-">assert.throws(block, [error], [message])</h2>
+<p>Expects <code>block</code> to throw an error. <code>error</code> can be constructor, regexp or 
+validation function.</p>
+<p>Validate instanceof using constructor:</p>
+<pre><code>assert.throws(
+  function() {
+    throw new Error(&quot;Wrong value&quot;);
+  },
+  Error
+);
+</code></pre><p>Validate error message using RegExp:</p>
+<pre><code>assert.throws(
+  function() {
+    throw new Error(&quot;Wrong value&quot;);
+  },
+  /value/
+);
+</code></pre><p>Custom error validation:</p>
+<pre><code>assert.throws(
+  function() {
+    throw new Error(&quot;Wrong value&quot;);
+  },
+  function(err) {
+    if ( (err instanceof Error) &amp;&amp; /value/.test(err) ) {
+      return true;
+    }
+  },
+  &quot;unexpected error&quot;
+);
+</code></pre><h2 id="assert-doesnotthrow-block-message-">assert.doesNotThrow(block, [message])</h2>
+<p>Expects <code>block</code> not to throw an error, see assert.throws for details.</p>
+<h2 id="assert-iferror-value-">assert.ifError(value)</h2>
+<p>Tests if value is not a false value, throws if it is a true value. Useful when
+testing the first argument, <code>error</code> in callbacks.</p>
+<h1 id="buffer">Buffer</h1>
+<p>Pure JavaScript is Unicode friendly but not nice to binary data. When
+dealing with binary or text data, it&#39;s necessary to have an efficient API
+for handling buffers of data.</p>
+<p>Raw data is stored in instances of the <code>Buffer</code> class. A <code>Buffer</code> is similar
+to an array of integers. A <code>Buffer</code> cannot be resized.</p>
+<p>Converting between Buffers and JavaScript string objects requires an explicit
+encoding method.  Here are the different string encodings.</p>
+<ul>
+<li><p><code>&#39;ascii&#39;</code> - for 7 bit ASCII data only.  This encoding method is very fast, and
+will strip the high bit if set.</p>
+</li>
+<li><p><code>&#39;utf8&#39;</code> - Multibyte encoded Unicode characters. Many web pages and other
+document formats use UTF-8.</p>
+</li>
+<li><p><code>&#39;utf16le&#39;</code> - 2 or 4 bytes, little endian encoded Unicode characters.
+Surrogate pairs (U+10000 to U+10FFFF) are supported.</p>
+</li>
+<li><p><code>&#39;ucs2&#39;</code> - Alias of <code>&#39;utf16le&#39;</code>.</p>
+</li>
+<li><p><code>&#39;base64&#39;</code> - Base64 string encoding.</p>
+</li>
+<li><p><code>&#39;hex&#39;</code> - Encode each byte as two hexadecimal characters.</p>
+</li>
+</ul>
+<h2 id="class-buffer">Class: Buffer</h2>
+<p>The Buffer class is a global type for dealing with binary data directly.
+It can be constructed in a variety of ways.</p>
+<h3 id="new-buffer-size-">new Buffer(size)</h3>
+<ul>
+<li><code>size</code> Number</li>
+</ul>
+<p>Allocates a new buffer of <code>size</code> octets.</p>
+<h3 id="new-buffer-array-">new Buffer(array)</h3>
+<ul>
+<li><code>array</code> Array</li>
+</ul>
+<p>Allocates a new buffer using an <code>array</code> of octets.</p>
+<h3 id="new-buffer-str-encoding-">new Buffer(str, [encoding])</h3>
+<ul>
+<li><code>str</code> String - string to encode.</li>
+<li><code>encoding</code> String - encoding to use, Optional.</li>
+</ul>
+<p>Allocates a new buffer containing the given <code>str</code>.
+<code>encoding</code> defaults to <code>&#39;utf8&#39;</code>.</p>
+<h3 id="class-method-buffer-isencoding-encoding-">Class Method: Buffer.isEncoding(encoding)</h3>
+<ul>
+<li><code>encoding</code> {String} The encoding string to test</li>
+</ul>
+<p>Returns true if the <code>encoding</code> is a valid encoding argument, or false
+otherwise.</p>
+<h3 id="class-method-buffer-isbuffer-obj-">Class Method: Buffer.isBuffer(obj)</h3>
+<ul>
+<li><code>obj</code> Object</li>
+<li>Return: Boolean</li>
+</ul>
+<p>Tests if <code>obj</code> is a <code>Buffer</code>.</p>
+<h3 id="class-method-buffer-bytelength-string-encoding-">Class Method: Buffer.byteLength(string, [encoding])</h3>
+<ul>
+<li><code>string</code> String</li>
+<li><code>encoding</code> String, Optional, Default: &#39;utf8&#39;</li>
+<li>Return: Number</li>
+</ul>
+<p>Gives the actual byte length of a string. <code>encoding</code> defaults to <code>&#39;utf8&#39;</code>.
+This is not the same as <code>String.prototype.length</code> since that returns the
+number of <em>characters</em> in a string.</p>
+<p>Example:</p>
+<pre><code>var str = &#39;\u00bd + \u00bc = \u00be&#39;;
+
+console.log (str + &quot;: &quot; + str.length + &quot; characters, &quot; +
+    Buffer.byteLength(str, &#39;utf8&#39;) + &quot; bytes&quot;);
+
+// B= + B&lt; = B&gt;: 9 characters, 12 bytes
+</code></pre><h3 id="class-method-buffer-concat-list-totallength-">Class Method: Buffer.concat(list, [totalLength])</h3>
+<ul>
+<li><code>list</code> {Array} List of Buffer objects to concat</li>
+<li><code>totalLength</code> {Number} Total length of the buffers when concatenated</li>
+</ul>
+<p>Returns a buffer which is the result of concatenating all the buffers in
+the list together.</p>
+<p>If the list has no items, or if the totalLength is 0, then it returns a
+zero-length buffer.</p>
+<p>If the list has exactly one item, then the first item of the list is
+returned.</p>
+<p>If the list has more than one item, then a new Buffer is created.</p>
+<p>If totalLength is not provided, it is read from the buffers in the list.
+However, this adds an additional loop to the function, so it is faster
+to provide the length explicitly.</p>
+<h3 id="buf-length">buf.length</h3>
+<ul>
+<li>Number</li>
+</ul>
+<p>The size of the buffer in bytes.  Note that this is not necessarily the size
+of the contents. <code>length</code> refers to the amount of memory allocated for the
+buffer object.  It does not change when the contents of the buffer are changed.</p>
+<pre><code>var buf = new Buffer(1234);
+
+console.log(buf.length);
+buf.write(&quot;some string&quot;, 0, &quot;ascii&quot;);
+console.log(buf.length);
+
+// 1234
+// 1234
+</code></pre><h3 id="buf-write-string-offset-length-encoding-">buf.write(string, [offset], [length], [encoding])</h3>
+<ul>
+<li><code>string</code> String - data to be written to buffer</li>
+<li><code>offset</code> Number, Optional, Default: 0</li>
+<li><code>length</code> Number, Optional, Default: <code>buffer.length - offset</code></li>
+<li><code>encoding</code> String, Optional, Default: &#39;utf8&#39;</li>
+</ul>
+<p>Writes <code>string</code> to the buffer at <code>offset</code> using the given encoding.
+<code>offset</code> defaults to <code>0</code>, <code>encoding</code> defaults to <code>&#39;utf8&#39;</code>. <code>length</code> is
+the number of bytes to write. Returns number of octets written. If <code>buffer</code> did
+not contain enough space to fit the entire string, it will write a partial
+amount of the string. <code>length</code> defaults to <code>buffer.length - offset</code>.
+The method will not write partial characters.</p>
+<pre><code>var buf = new Buffer(256);
+var len = buf.write(&#39;\u00bd + \u00bc = \u00be&#39;, 0);
+console.log(len + &quot; bytes: &quot; + buf.toString(&#39;utf8&#39;, 0, len));
+</code></pre><h3 id="buf-tostring-encoding-start-end-">buf.toString([encoding], [start], [end])</h3>
+<ul>
+<li><code>encoding</code> String, Optional, Default: &#39;utf8&#39;</li>
+<li><code>start</code> Number, Optional, Default: 0</li>
+<li><code>end</code> Number, Optional, Default: <code>buffer.length</code></li>
+</ul>
+<p>Decodes and returns a string from buffer data encoded with <code>encoding</code>
+(defaults to <code>&#39;utf8&#39;</code>) beginning at <code>start</code> (defaults to <code>0</code>) and ending at
+<code>end</code> (defaults to <code>buffer.length</code>).</p>
+<p>See <code>buffer.write()</code> example, above.</p>
+<h3 id="buf-tojson-">buf.toJSON()</h3>
+<p>Returns a JSON-representation of the Buffer instance.  <code>JSON.stringify</code>
+implicitly calls this function when stringifying a Buffer instance.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(&#39;test&#39;);
+var json = JSON.stringify(buf);
+
+console.log(json);
+// &#39;{&quot;type&quot;:&quot;Buffer&quot;,&quot;data&quot;:[116,101,115,116]}&#39;
+
+var copy = JSON.parse(json, function(key, value) {
+    return value &amp;&amp; value.type === &#39;Buffer&#39;
+      ? new Buffer(value.data)
+      : value;
+  });
+
+console.log(copy);
+// &lt;Buffer 74 65 73 74&gt;
+</code></pre><h3 id="buf-index-">buf[index]</h3>
+<!--type=property-->
+<!--name=[index]-->
+
+<p>Get and set the octet at <code>index</code>. The values refer to individual bytes,
+so the legal range is between <code>0x00</code> and <code>0xFF</code> hex or <code>0</code> and <code>255</code>.</p>
+<p>Example: copy an ASCII string into a buffer, one byte at a time:</p>
+<pre><code>var str = &quot;GatewayScript&quot;;
+var buf = new Buffer (str.length);
+
+for (var i = 0; i &lt; str.length ; i++) {
+  buf[i] = str.charCodeAt(i);
+}
+
+console.log(buf);
+</code></pre><h3 id="buf-copy-targetbuffer-targetstart-sourcestart-sourceend-">buf.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd])</h3>
+<ul>
+<li><code>targetBuffer</code> Buffer object - Buffer to copy into</li>
+<li><code>targetStart</code> Number, Optional, Default: 0</li>
+<li><code>sourceStart</code> Number, Optional, Default: 0</li>
+<li><code>sourceEnd</code> Number, Optional, Default: <code>buffer.length</code></li>
+</ul>
+<p>Does copy between buffers. The source and target regions can be overlapped.
+<code>targetStart</code> and <code>sourceStart</code> default to <code>0</code>.
+<code>sourceEnd</code> defaults to <code>buffer.length</code>.</p>
+<p>All values passed that are <code>undefined</code>/<code>NaN</code> or are out of bounds are set equal
+to their respective defaults.</p>
+<p>Example: build two Buffers, then copy <code>buf1</code> from byte 16 through byte 19
+into <code>buf2</code>, starting at the 8th byte in <code>buf2</code>.</p>
+<pre><code>var buf1 = new Buffer(26);
+var buf2 = new Buffer(26);
+
+for (var i = 0 ; i &lt; 26 ; i++) {
+  buf1[i] = i + 97; // 97 is ASCII a
+  buf2[i] = 33; // ASCII !
+}
+
+buf1.copy(buf2, 8, 16, 20);
+console.log(buf2.toString(&#39;ascii&#39;, 0, 25));
+
+// !!!!!!!!qrst!!!!!!!!!!!!!
+</code></pre><h3 id="buf-slice-start-end-">buf.slice([start], [end])</h3>
+<ul>
+<li><code>start</code> Number, Optional, Default: 0</li>
+<li><code>end</code> Number, Optional, Default: <code>buffer.length</code></li>
+</ul>
+<p>Returns a new buffer which references the same memory as the old, but offset
+and cropped by the <code>start</code> (defaults to <code>0</code>) and <code>end</code> (defaults to
+<code>buffer.length</code>) indexes.  Negative indexes start from the end of the buffer.</p>
+<p><strong>Modifying the new buffer slice will modify memory in the original buffer!</strong></p>
+<p>Example: build a Buffer with the ASCII alphabet, take a slice, then modify one
+byte from the original Buffer.</p>
+<pre><code>var buf1 = new Buffer(26);
+
+for (var i = 0 ; i &lt; 26 ; i++) {
+  buf1[i] = i + 97; // 97 is ASCII a
+}
+
+var buf2 = buf1.slice(0, 3);
+console.log(buf2.toString(&#39;ascii&#39;, 0, buf2.length));
+buf1[0] = 33;
+console.log(buf2.toString(&#39;ascii&#39;, 0, buf2.length));
+
+// abc
+// !bc
+</code></pre><h3 id="buf-readuint8-offset-noassert-">buf.readUInt8(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads an unsigned 8 bit integer from the buffer at the specified offset.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+
+for (ii = 0; ii &lt; buf.length; ii++) {
+  console.log(buf.readUInt8(ii));
+}
+
+// 0x3
+// 0x4
+// 0x23
+// 0x42
+</code></pre><h3 id="buf-readuint16le-offset-noassert-">buf.readUInt16LE(offset, [noAssert])</h3>
+<h3 id="buf-readuint16be-offset-noassert-">buf.readUInt16BE(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads an unsigned 16 bit integer from the buffer at the specified offset with
+specified endian format.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+
+console.log(buf.readUInt16BE(0));
+console.log(buf.readUInt16LE(0));
+console.log(buf.readUInt16BE(1));
+console.log(buf.readUInt16LE(1));
+console.log(buf.readUInt16BE(2));
+console.log(buf.readUInt16LE(2));
+
+// 0x0304
+// 0x0403
+// 0x0423
+// 0x2304
+// 0x2342
+// 0x4223
+</code></pre><h3 id="buf-readuint32le-offset-noassert-">buf.readUInt32LE(offset, [noAssert])</h3>
+<h3 id="buf-readuint32be-offset-noassert-">buf.readUInt32BE(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads an unsigned 32 bit integer from the buffer at the specified offset with
+specified endian format.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+
+console.log(buf.readUInt32BE(0));
+console.log(buf.readUInt32LE(0));
+
+// 0x03042342
+// 0x42230403
+</code></pre><h3 id="buf-readint8-offset-noassert-">buf.readInt8(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads a signed 8 bit integer from the buffer at the specified offset.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Works as <code>buffer.readUInt8</code>, except buffer contents are treated as two&#39;s
+complement signed values.</p>
+<h3 id="buf-readint16le-offset-noassert-">buf.readInt16LE(offset, [noAssert])</h3>
+<h3 id="buf-readint16be-offset-noassert-">buf.readInt16BE(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads a signed 16 bit integer from the buffer at the specified offset with
+specified endian format.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Works as <code>buffer.readUInt16*</code>, except buffer contents are treated as two&#39;s
+complement signed values.</p>
+<h3 id="buf-readint32le-offset-noassert-">buf.readInt32LE(offset, [noAssert])</h3>
+<h3 id="buf-readint32be-offset-noassert-">buf.readInt32BE(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads a signed 32 bit integer from the buffer at the specified offset with
+specified endian format.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Works as <code>buffer.readUInt32*</code>, except buffer contents are treated as two&#39;s
+complement signed values.</p>
+<h3 id="buf-readfloatle-offset-noassert-">buf.readFloatLE(offset, [noAssert])</h3>
+<h3 id="buf-readfloatbe-offset-noassert-">buf.readFloatBE(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads a 32 bit float from the buffer at the specified offset with specified
+endian format.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x00;
+buf[1] = 0x00;
+buf[2] = 0x80;
+buf[3] = 0x3f;
+
+console.log(buf.readFloatLE(0));
+
+// 0x01
+</code></pre><h3 id="buf-readdoublele-offset-noassert-">buf.readDoubleLE(offset, [noAssert])</h3>
+<h3 id="buf-readdoublebe-offset-noassert-">buf.readDoubleBE(offset, [noAssert])</h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+<li>Return: Number</li>
+</ul>
+<p>Reads a 64 bit double from the buffer at the specified offset with specified
+endian format.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>offset</code>. This means that <code>offset</code>
+may be beyond the end of the buffer. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(8);
+
+buf[0] = 0x55;
+buf[1] = 0x55;
+buf[2] = 0x55;
+buf[3] = 0x55;
+buf[4] = 0x55;
+buf[5] = 0x55;
+buf[6] = 0xd5;
+buf[7] = 0x3f;
+
+console.log(buf.readDoubleLE(0));
+
+// 0.3333333333333333
+</code></pre><h3 id="buf-writeuint8-value-offset-noassert-">buf.writeUInt8(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset. Note, <code>value</code> must be a
+valid unsigned 8 bit integer.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeUInt8(0x3, 0);
+buf.writeUInt8(0x4, 1);
+buf.writeUInt8(0x23, 2);
+buf.writeUInt8(0x42, 3);
+
+console.log(buf);
+
+// &lt;Buffer 03 04 23 42&gt;
+</code></pre><h3 id="buf-writeuint16le-value-offset-noassert-">buf.writeUInt16LE(value, offset, [noAssert])</h3>
+<h3 id="buf-writeuint16be-value-offset-noassert-">buf.writeUInt16BE(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset with specified endian
+format. Note, <code>value</code> must be a valid unsigned 16 bit integer.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeUInt16BE(0xdead, 0);
+buf.writeUInt16BE(0xbeef, 2);
+
+console.log(buf);
+
+buf.writeUInt16LE(0xdead, 0);
+buf.writeUInt16LE(0xbeef, 2);
+
+console.log(buf);
+
+// &lt;Buffer de ad be ef&gt;
+// &lt;Buffer ad de ef be&gt;
+</code></pre><h3 id="buf-writeuint32le-value-offset-noassert-">buf.writeUInt32LE(value, offset, [noAssert])</h3>
+<h3 id="buf-writeuint32be-value-offset-noassert-">buf.writeUInt32BE(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset with specified endian
+format. Note, <code>value</code> must be a valid unsigned 32 bit integer.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeUInt32BE(0xfeedface, 0);
+
+console.log(buf);
+
+buf.writeUInt32LE(0xfeedface, 0);
+
+console.log(buf);
+
+// &lt;Buffer fe ed fa ce&gt;
+// &lt;Buffer ce fa ed fe&gt;
+</code></pre><h3 id="buf-writeint8-value-offset-noassert-">buf.writeInt8(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset. Note, <code>value</code> must be a
+valid signed 8 bit integer.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Works as <code>buffer.writeUInt8</code>, except value is written out as a two&#39;s complement
+signed integer into <code>buffer</code>.</p>
+<h3 id="buf-writeint16le-value-offset-noassert-">buf.writeInt16LE(value, offset, [noAssert])</h3>
+<h3 id="buf-writeint16be-value-offset-noassert-">buf.writeInt16BE(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset with specified endian
+format. Note, <code>value</code> must be a valid signed 16 bit integer.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Works as <code>buffer.writeUInt16*</code>, except value is written out as a two&#39;s
+complement signed integer into <code>buffer</code>.</p>
+<h3 id="buf-writeint32le-value-offset-noassert-">buf.writeInt32LE(value, offset, [noAssert])</h3>
+<h3 id="buf-writeint32be-value-offset-noassert-">buf.writeInt32BE(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset with specified endian
+format. Note, <code>value</code> must be a valid signed 32 bit integer.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Works as <code>buffer.writeUInt32*</code>, except value is written out as a two&#39;s
+complement signed integer into <code>buffer</code>.</p>
+<h3 id="buf-writefloatle-value-offset-noassert-">buf.writeFloatLE(value, offset, [noAssert])</h3>
+<h3 id="buf-writefloatbe-value-offset-noassert-">buf.writeFloatBE(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset with specified endian
+format. Note, behavior is unspecified if <code>value</code> is not a 32 bit float.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeFloatBE(0xcafebabe, 0);
+
+console.log(buf);
+
+buf.writeFloatLE(0xcafebabe, 0);
+
+console.log(buf);
+
+// &lt;Buffer 4f 4a fe bb&gt;
+// &lt;Buffer bb fe 4a 4f&gt;
+</code></pre><h3 id="buf-writedoublele-value-offset-noassert-">buf.writeDoubleLE(value, offset, [noAssert])</h3>
+<h3 id="buf-writedoublebe-value-offset-noassert-">buf.writeDoubleBE(value, offset, [noAssert])</h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean, Optional, Default: false</li>
+</ul>
+<p>Writes <code>value</code> to the buffer at the specified offset with specified endian
+format. Note, <code>value</code> must be a valid 64 bit double.</p>
+<p>Set <code>noAssert</code> to true to skip validation of <code>value</code> and <code>offset</code>. This means
+that <code>value</code> may be too large for the specific function and <code>offset</code> may be
+beyond the end of the buffer leading to the values being silently dropped. This
+should not be used unless you are certain of correctness. Defaults to <code>false</code>.</p>
+<p>Example:</p>
+<pre><code>var buf = new Buffer(8);
+buf.writeDoubleBE(0xdeadbeefcafebabe, 0);
+
+console.log(buf);
+
+buf.writeDoubleLE(0xdeadbeefcafebabe, 0);
+
+console.log(buf);
+
+// &lt;Buffer 43 eb d5 b7 dd f9 5f d7&gt;
+// &lt;Buffer d7 5f f9 dd b7 d5 eb 43&gt;
+</code></pre><h3 id="buf-fill-value-offset-end-">buf.fill(value, [offset], [end])</h3>
+<ul>
+<li><code>value</code></li>
+<li><code>offset</code> Number, Optional</li>
+<li><code>end</code> Number, Optional</li>
+</ul>
+<p>Fills the buffer with the specified value. If the <code>offset</code> (defaults to <code>0</code>)
+and <code>end</code> (defaults to <code>buffer.length</code>) are not given it will fill the entire
+buffer.</p>
+<pre><code>var b = new Buffer(50);
+b.fill(&quot;h&quot;);
+</code></pre><h3 id="buf-toarraybuffer-">buf.toArrayBuffer()</h3>
+<p>Creates a new <code>ArrayBuffer</code> with the copied memory of the buffer instance.</p>
+<h1 id="buffers">buffers</h1>
+<p>Treat a collection of Buffers as a single contiguous partially mutable Buffer.
+Where possible, operations execute without creating a new Buffer and copying
+everything over.</p>
+<h1 id="example">example</h1>
+<h2 id="slice">slice</h2>
+<pre><code>var Buffers = require(&#39;buffers&#39;);
+var bufs = Buffers();
+bufs.push(new Buffer([1,2,3]));
+bufs.push(new Buffer([4,5,6,7]));
+bufs.push(new Buffer([8,9,10]));
+
+console.log(bufs.slice(2,8))
+
+// &lt;Buffer 03 04 05 06 07 08&gt;
+</code></pre><h2 id="splice">splice</h2>
+<pre><code>var Buffers = require(&#39;buffers&#39;);
+var bufs = Buffers([
+    new Buffer([1,2,3]),
+    new Buffer([4,5,6,7]),
+    new Buffer([8,9,10]),
+]);
+
+var removed = bufs.splice(2, 4);
+console.log({
+    removed : removed.slice(),
+    bufs : bufs.slice(),
+});
+
+//{ removed: &lt;Buffer 03 04 05 06&gt;, bufs: &lt;Buffer 01 02 07 08 09 0a&gt; }
+</code></pre><h1 id="methods">methods</h1>
+<h2 id="buffers-buffers-">Buffers(buffers)</h2>
+<p>Create a Buffers with an array of <code>Buffer</code>s if specified, else <code>[]</code>.</p>
+<h2 id="-push-buf1-buf2-">.push(buf1, buf2...)</h2>
+<p>Push buffers onto the end. Just like <code>Array.prototype.push</code>.</p>
+<h2 id="-unshift-buf1-buf2-">.unshift(buf1, buf2...)</h2>
+<p>Unshift buffers onto the head. Just like <code>Array.prototype.unshift</code>.</p>
+<h2 id="-slice-i-j-">.slice(i, j)</h2>
+<p>Slice a range out of the buffer collection as if it were contiguous.
+Works just like the <code>Array.prototype.slice</code> version.</p>
+<h2 id="-splice-i-howmany-replacements-">.splice(i, howMany, replacements)</h2>
+<p>Splice the buffer collection as if it were contiguous.
+Works just like <code>Array.prototype.splice</code>, even the replacement part!</p>
+<h2 id="-copy-dst-dststart-start-end-">.copy(dst, dstStart, start, end)</h2>
+<p>Copy the buffer collection as if it were contiguous to the <code>dst</code> Buffer with the
+specified bounds.
+Works just like <code>Buffer.prototype.copy</code>.</p>
+<h2 id="-get-i-">.get(i)</h2>
+<p>Get a single element at index <code>i</code>.</p>
+<h2 id="-set-i-x-">.set(i, x)</h2>
+<p>Set a single element&#39;s value at index <code>i</code>.</p>
+<h2 id="-indexof-needle-offset-">.indexOf(needle, offset)</h2>
+<p>Find a string or buffer <code>needle</code> inside the buffer collection. Returns
+the position of the search string or -1 if the search string was not
+found.</p>
+<p>Provide an <code>offset</code> to skip that number of characters at the beginning
+of the search. This can be used to find additional matches.</p>
+<p>This function will return the correct result even if the search string
+is spread out over multiple internal buffers.</p>
+<h2 id="-tobuffer-">.toBuffer()</h2>
+<p>Convert the buffer collection to a single buffer, equivalent with <code>.slice(0, buffers.length)</code>;</p>
+<h2 id="-tostring-encoding-start-end-">.toString(encoding, start, end)</h2>
+<p>Decodes and returns a string from the buffer collection.
+Works just like <code>Buffer.prototype.toString</code></p>
+<h1 id="console">console</h1>
+<p>Use the Console API to write a log message directly to DataPower system log.
+The console namespace is provided without having to require(&#39;console&#39;) the
+functionality.</p>
+<h2 id="console-log-data-">console.log([data], [...])</h2>
+<p>Prints to the DataPower console with a newline. This function can take multiple
+arguments using a <code>printf</code> style format specifier</p>
+<pre><code>var count = 10;
+console.log(&#39;count: %d&#39;, count);
+</code></pre><p>If formatting elements are not found in the first string then each argument
+is inspected and converted to a string representation</p>
+<h2 id="console-debug-data-">console.debug([data], [...])</h2>
+<p>Same as <code>console.log</code>. Prints to the DataPower system log at debug level</p>
+<h2 id="console-info-data-">console.info([data], [...])</h2>
+<p>Print the DataPower system log at info level</p>
+<h2 id="console-notice-data-">console.notice ([data], [...])</h2>
+<p>Prints to the DataPower system log at notice level</p>
+<h2 id="console-warn-data-">console.warn([data], [...])</h2>
+<p>Prints to the DataPower system log at warning level</p>
+<h2 id="console-error-data-">console.error([data], [...])</h2>
+<p>Prints to the DataPower system log at error level</p>
+<h2 id="console-critical-data-">console.critical([data], [...])</h2>
+<p>Prints to the DataPower system log at critical level</p>
+<h2 id="console-alert-data-">console.alert([data], [...])</h2>
+<p>Prints to the DataPower system log at alert level</p>
+<h2 id="console-emerg-data-">console.emerg([data], [...])</h2>
+<p>Prints to the DataPower system log at emergency level</p>
+<h2 id="console-trace-data-">console.trace([data], [...])</h2>
+<p>Same as <code>console.debug</code>.</p>
+<p>Example:</p>
+<pre><code>// The following log levels are provided
+console.debug(&quot;debug&quot;);
+console.info(&quot;info&quot;);
+console.notice(&quot;notice&quot;);
+console.warn(&quot;warn&quot;);
+console.error(&quot;error&quot;);
+console.critical(&quot;critical&quot;);
+console.alert(&quot;alert&quot;);
+console.emerg(&quot;emerg&quot;);
+console.log(&quot;log/info&quot;)
+console.trace(&quot;trace/debug&quot;);
+
+// Advanced printf style formatting is supported
+// logged as 10011010010 S 1234 1234 1.234e+3 1.234E+3 1234 2322 &#39;abcd&#39; abcd ABCD 1234 4d2 4D2 &quot;abcd&quot;
+console.log (&quot;%1$b %1$c %1$i %1$d %1$e %1$E %1$f %1$o %2$O %2$s %2$S %1$u %1$x %1$X %2$j&quot;, 1234, &quot;abcd&quot;);
+
+// %b binary
+// %c unsigned char
+// %i unsigned decimal
+// %d unsigned decimal
+// %e scientific notation
+// %E scientific notation uppercase
+// %f floating point
+// %o unsigned octal
+// %O object inspect
+// %s string - toString()
+// %S string uppercase
+// %u unsigned decimal
+// %x unsigned hexadecimal
+// %X unsigned hexadecimal uppercase
+// %j JSON.stringify
+</code></pre><h1 id="context">Context</h1>
+<p>Use a context object to read the input of the GatewayScript action, or
+to write the output of a GatewayScript action. The context can be thought
+of as the body of a request. When a request is received, it is immediately
+placed in the <code>INPUT</code> context. That context does not change, and can be
+accessed at any time by any GatewayScript Action in that processing rule.
+Each action has a configurable input and a configurable output context.
+These input and output options are actually specifying input and output
+contexts to that action. The input context (session.input) is not necessarily
+passed from the previous action. Likewise, the output context (session.output)
+of the GatewayScript action is specified by users at configuration time.</p>
+<p>If a GatewayScript Action does not read the <code>input</code> context and does not
+write to the <code>output</code> context, then the payload automatically gets
+transferred from the <code>input</code> to the <code>output</code> and continues on.</p>
+<p>Contexts are properties of the session object. You can use the session object to
+access the following contexts:</p>
+<h2 id="-input">.INPUT</h2>
+<p>Context holding the body of the message as it was initially received</p>
+<h2 id="-input">.input</h2>
+<p>Context specified by the <code>Input</code> property of the GatewayScript Action configuration</p>
+<h2 id="-output">.output</h2>
+<p>Context specified by the <code>Output</code> property of the GatewayScript Action configuration</p>
+<h2 id="name-contextname-">name(&#39;contextName&#39;)</h2>
+<p>Used to access a named context explicitly created by a GatewayScript or XForm action</p>
+<p>To access the context, you specify the context off of the session object.  To create
+a named context, see the session object API.</p>
+<p>Example:</p>
+<p>For example, to read the input to a GatewayScript action (i.e. the <code>input</code> context),
+use the following:</p>
+<pre><code>// Read the input as a JSON object
+session.input.readAsJSON (function (error, json) {
+    if (error) {
+       // an error occurred when parsing the content, e.g. invalid JSON object
+       // uncatched error will stop the processing and the error will be logged
+       throw error;
+    }
+    // Add data to the input object and write to the ouput context
+    json.extra = &quot;Extra value&quot;;
+    session.output.write(json);
+});
+</code></pre><p>The following is another example of how to set/get/delete variables on the context:</p>
+<pre><code>// set variable to the input context
+session.input.setVar(&#39;myInputVar&#39;, {myInputValue: 4});
+
+// get variable from the input context
+var myInputVar = session.input.getVar(&#39;myInputVar&#39;); // {myInputValue: 4}
+
+// create a context named `myContext` if not exist
+var ctx = session.name(&#39;myContext&#39;) || session.createContext(&#39;myContext&#39;);
+
+// set/get/delete variable on the named context
+ctx.setVar(&#39;myContextVar&#39;, &#39;myValue&#39;);
+
+var myContextVar1 = ctx.getVar(&#39;myContextVar&#39;); // &quot;myValue&quot;
+
+ctx.deleteVar(&#39;myContextVar&#39;);
+
+var myContextVar2 = ctx.getVar(&#39;myContextVar&#39;); // undefined
+
+session.output.write({
+    myInputVar: myInputVar,
+    myContextVar1: myContextVar1,
+    myContextVar2: myContextVar2 || null
+});
+</code></pre><h2 id="api-">API:</h2>
+<h2 id="session-name-myctxname-getvar-myvar-">session.name(&#39;myCtxName&#39;).getVar(&#39;myVar&#39;)</h2>
+<p>Read a variable named &#39;myVar&#39; from the &#39;myCtxName&#39; context</p>
+<h2 id="session-name-myctxname-setvar-myvar-myvalue-">session.name(&#39;myCtxName&#39;).setVar(&#39;myVar&#39;, &#39;myValue&#39;)</h2>
+<p>Write a context variable named myVar on the myCtxName context with the value of &#39;myValue&#39;</p>
+<h2 id="session-name-myctxname-deletevar-myval-">session.name(&#39;myCtxName&#39;).deleteVar(&#39;myVal&#39;)</h2>
+<p>Delete the context variable myVar</p>
+<h2 id="session-input-readasbuffer-function-error-buffer-">session.input.readAsBuffer(function (error, buffer) {})</h2>
+<p>Asynchronously reads the input context as binary data and returns either
+an error object, or the binary data as a Buffer object</p>
+<h2 id="session-input-readasbuffers-function-error-buffers-">session.input.readAsBuffers(function (error, buffers) {})</h2>
+<p>Asynchronously reads the input context and returns either the Buffers
+object or an error object. Buffers object is a collection of Buffer objects.</p>
+<h2 id="session-input-readasjson-function-error-jsonobject-">session.input.readAsJSON(function (error, jsonObject) {})</h2>
+<p>Asynchronously reads the input context, parses it as a JSON object, and
+returns the resulting jsonObject or an error.</p>
+<h2 id="session-output-write-my-data-">session.output.write({ &quot;my&quot;: &quot;Data&quot;});</h2>
+<p>Writes the output to an output context</p>
+<h1 id="error">Error</h1>
+<p>Use the Error API to interrogate the results of thrown errors or errors that are
+returned as part of the asynchronous function calls. This module is available
+without an explicit <code>require(&#39;error&#39;)</code>.</p>
+<p>Examples:</p>
+<pre><code>try {
+    Integer.parseInt(&#39;string&#39;);
+} catch (error) {
+
+    // English text message describing the failure that occurred
+    error.errorMessage;
+
+    // Message ID in hex string format
+    error.errorCode;
+
+    // English help text describing what the error is and the cause.
+    error.errorDescription; 
+
+    // English suggestion on how to resolve the error
+    error.errorSuggestion;
+
+    // Back trace listing the call stack leading up to the error occurrence.
+    error.stack;
+
+    session.output.write(error);
+}
+</code></pre><h1 id="header-metadata">Header-metadata</h1>
+<p>Use header-metadata to access the headers of an incoming request or response, you
+can access it with <code>require(&#39;header-metadata&#39;)</code>. The headers module is broken
+down into three sub-modules: original, current, and response.</p>
+<ul>
+<li><p><code>original</code> - represents the original collection of headers received off the
+wire. For a request rule, these are the headers received in the request from
+the client. For a response rule, these are the headers received in the
+response from the back-end host. Original headers are read only.</p>
+</li>
+<li><p><code>current</code> - represents the current state of the headers as they are being
+passed from action to action along a processing rule. The processing rule may
+be either a request rule or a response rule. Current headers are read/write.</p>
+</li>
+<li><p><code>response</code> - represents the header collection that is used for a response that
+is being created in the request rule. This is used for a loopback firewall or
+when skip-backside is used in a multiprotocol gateway. Response headers are
+read/write.</p>
+</li>
+</ul>
+<p>Exampes:</p>
+<pre><code>var hm = require(&#39;header-metadata&#39;);
+
+// Get single header value. Read the content-type header (case insensitive).
+// Note that if there are multiple headers with the same name (e.g. 
+// set-cookie), then only the first header is returned as a string
+var contentType = hm.current.get(&#39;content-type&#39;);
+
+// Retrieve a json object with all headers
+var allHeaders = hm.current.get();
+
+// Retrieve a json object with all headers in another form
+var allHeaders = hm.current.headers;
+
+// Set single header. Sets X-new-header to a value of new-header.
+hm.current.set(&#39;X-new-header&#39;, &#39;new-header&#39;);
+
+ // Allows for set-cookie on multiple lines
+hm.current.set(&#39;set-cookie&#39;, [&#39;value1&#39;, &#39;value2&#39;]);
+
+// write the status code with a number. Standard reasonPhrase is set to
+// the corresponding value (in this case, .OK.).
+hm.current.statusCode = &quot;200&quot;;
+hm.current.statusCode = 200;
+
+// specify status code with a string containing the statusCode and 
+// reasonPhrase separated by a single space.
+hm.current.statusCode = &quot;200 Super-Duper&quot;;
+
+// Get the status code and reason phrase 
+var currentStatusCode = hm.current.statusCode;     // 200
+var currentReasonPhrase = hm.current.reasonPhrase; // Super-Duper
+
+// Also can get the status code and reason phrase off the wire
+var originalStatusCode = hm.original.statusCode;
+var originalReasonPhrase = hm.original.reasonPhrase;
+
+session.output.write({
+    contentType: contentType,
+    allHeaders: allHeaders,
+    currentStatusCode: currentStatusCode,
+    currentReasonPhrase: currentReasonPhrase,
+    originalStatusCode: originalStatusCode,
+    originalReasonPhrase: originalReasonPhrase
+});
+</code></pre><h1 id="punycode">punycode</h1>
+<p>Utilities for converting to and from Unicode code points into strings of &quot;Punycode&quot; ASCII
+code points.  It provides the following methods:</p>
+<h2 id="punycode-decode-string-">punycode.decode(string)</h2>
+<p>Converts a Punycode string of ASCII-only symbols to a string of Unicode symbols.</p>
+<pre><code>// decode domain name parts
+punycode.decode(&#39;maana-pta&#39;); // &#39;maC1ana&#39;
+punycode.decode(&#39;--dqo34k&#39;); // &#39;b-b&#39;
+</code></pre><h2 id="punycode-encode-string-">punycode.encode(string)</h2>
+<p>Converts a string of Unicode symbols to a Punycode string of ASCII-only symbols.</p>
+<pre><code>// encode domain name parts
+punycode.encode(&#39;maC1ana&#39;); // &#39;maana-pta&#39;
+punycode.encode(&#39;b-b&#39;); // &#39;--dqo34k&#39;
+</code></pre><h2 id="punycode-tounicode-domain-">punycode.toUnicode(domain)</h2>
+<p>Converts a Punycode string representing a domain name to Unicode. Only the
+Punycoded parts of the domain name will be converted, i.e. it doesn&#39;t matter if
+you call it on a string that has already been converted to Unicode.</p>
+<pre><code>// decode domain names
+punycode.toUnicode(&#39;xn--maana-pta.com&#39;); // &#39;maC1ana.com&#39;
+punycode.toUnicode(&#39;xn----dqo34k.com&#39;); // &#39;b-b.com&#39;
+</code></pre><h2 id="punycode-toascii-domain-">punycode.toASCII(domain)</h2>
+<p>Converts a Unicode string representing a domain name to Punycode. Only the
+non-ASCII parts of the domain name will be converted, i.e. it doesn&#39;t matter if
+you call it with a domain that&#39;s already in ASCII.</p>
+<pre><code>// encode domain names
+punycode.toASCII(&#39;maC1ana.com&#39;); // &#39;xn--maana-pta.com&#39;
+punycode.toASCII(&#39;b-b.com&#39;); // &#39;xn----dqo34k.com&#39;
+</code></pre><h2 id="punycode-ucs2">punycode.ucs2</h2>
+<h3 id="punycode-ucs2-decode-string-">punycode.ucs2.decode(string)</h3>
+<p>Creates an array containing the numeric code point values of each Unicode
+symbol in the string. While <a href="http://mathiasbynens.be/notes/javascript-encoding">JavaScript uses UCS-2
+internally</a>, this function
+will convert a pair of surrogate halves (each of which UCS-2 exposes as
+separate characters) into a single code point, matching UTF-16.</p>
+<pre><code>punycode.ucs2.decode(&#39;abc&#39;); // [0x61, 0x62, 0x63]
+// surrogate pair for U+1D306 tetragram for centre:
+punycode.ucs2.decode(&#39;\uD834\uDF06&#39;); // [0x1D306]
+</code></pre><h3 id="punycode-ucs2-encode-codepoints-">punycode.ucs2.encode(codePoints)</h3>
+<p>Creates a string based on an array of numeric code point values.</p>
+<pre><code>punycode.ucs2.encode([0x61, 0x62, 0x63]); // &#39;abc&#39;
+punycode.ucs2.encode([0x1D306]); // &#39;\uD834\uDF06&#39;
+</code></pre><h2 id="punycode-version">punycode.version</h2>
+<p>A string representing the current Punycode.js version number.</p>
+<h1 id="query-string">Query String</h1>
+<p>This module provides utilities for dealing with query strings.
+It provides the following methods:</p>
+<h2 id="querystring-stringify-obj-sep-eq-">querystring.stringify(obj, [sep], [eq])</h2>
+<p>Serialize an object to a query string.
+Optionally override the default separator (<code>&#39;&amp;&#39;</code>) and assignment (<code>&#39;=&#39;</code>)
+characters.</p>
+<p>Example:
+    var querystring = require (&#39;querystring&#39;);</p>
+<pre><code>querystring.stringify({ foo: &#39;bar&#39;, baz: [&#39;qux&#39;, &#39;quux&#39;], corge: &#39;&#39; })
+// returns
+&#39;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge=&#39;
+
+querystring.stringify({foo: &#39;bar&#39;, baz: &#39;qux&#39;}, &#39;;&#39;, &#39;:&#39;)
+// returns
+&#39;foo:bar;baz:qux&#39;
+</code></pre><h2 id="querystring-parse-str-sep-eq-options-">querystring.parse(str, [sep], [eq], [options])</h2>
+<p>Deserialize a query string to an object.
+Optionally override the default separator (<code>&#39;&amp;&#39;</code>) and assignment (<code>&#39;=&#39;</code>)
+characters.</p>
+<p>Options object may contain <code>maxKeys</code> property (equal to 1000 by default), it&#39;ll
+be used to limit processed keys. Set it to 0 to remove key count limitation.</p>
+<p>Example:
+    var querystring = require (&#39;querystring&#39;);</p>
+<pre><code>querystring.parse(&#39;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge&#39;)
+// returns
+{ foo: &#39;bar&#39;, baz: [&#39;qux&#39;, &#39;quux&#39;], corge: &#39;&#39; }
+</code></pre><h2 id="querystring-escape">querystring.escape</h2>
+<p>The escape function used by <code>querystring.stringify</code>,
+provided so that it could be overridden if necessary.</p>
+<h2 id="querystring-unescape">querystring.unescape</h2>
+<p>The unescape function used by <code>querystring.parse</code>,
+provided so that it could be overridden if necessary.</p>
+<h1 id="service-metadata">Service Metadata</h1>
+<p>Use the service-metadata module to access service variables within the DataPower platform.
+Many service variables are defined in DataPower. These variables provide you a mechanism for
+reading or writing DataPower facilities for a given transaction.</p>
+<p>Access this module via the <code>require(&#39;service-metadata&#39;)</code> statement.</p>
+<h2 id="api-">API:</h2>
+<p>Service variables may be accessed in one of two ways. The preferred way is through a dotted
+notation. The other way is by using a getVar() or setVar() function call where the variable
+is defined with a URL. As an example, the skip-backside variable can be written using the
+dotted notation as shown:</p>
+<pre><code>var sm = require (&#39;service-metadata&#39;);
+sm.mpgw.skipBackside = true;  // Make the MPGW act as a loopback
+</code></pre><p>Or, the skip-backside variable can be written using the URL via the following:</p>
+<pre><code>var sm = require (&#39;service-metadata&#39;);
+sm.setVar (&#39;var://service/mpgw/skip-backside&#39;, true);
+</code></pre><p>Both are equivalent, but the preferred and simpler mechanism is to use the dotted notation.
+Each service variable is documented in the infocenter. If you know the URL of a service variable,
+you can derive the dotted notation by taking the path of the variable after the <code>service</code> identifier,
+converting the &#39;/&#39; characters to . characters, and converting the variable name to a lower camel
+case name. The lower camel case begins with a lower case letter, and removes hyphen characters 
+modifying the next sequential character to be upper case.</p>
+<p>To read a service variable, you can simply specify the dotted notation variable name. Or, you may
+use the getVar() method:</p>
+<pre><code>var sm = require (&#39;service-metadata&#39;);
+
+// read the method as a string using dotted notation
+var method = sm.protocolMethod;  
+
+// read the method as a string using the URL notation
+method = sm.getVar (&#39;var://service/protocol-method&#39;);
+
+// Read entire list of descriptors of variables using the list() method
+var list = sm.list();
+var descSkipBackside = list.filter(function(elm) {
+    return elm.name === &#39;var://service/mpgw/skip-backside&#39;;
+})[0];
+
+session.output.write({
+    method: method,
+    descSkipBackSide: descSkipBackside
+});
+</code></pre><h1 id="session">Session</h1>
+<p>Use the session object to create and to access context objects. The session
+object is unique for each individual transaction. It is used as the object
+through which access to the various contexts is provided. The session object
+is automatically available. No <code>require(&#39;session&#39;)</code> statement is required.</p>
+<p>Examples:</p>
+<pre><code>// Access the input context of an action
+session.input; 
+
+// Access the output context of an action
+session.output; 
+
+// Access the `INPUT` context. The `INPUT` context is the payload of the
+// request (for a request rule) or response (for a response rule) as it is
+// received directly from the network.
+session.INPUT;
+
+// session.OUTPUT - this is not allowed.
+// session.NULL  -  this is not allowed.
+// session.PIPE  -  this is not allowed.
+
+// The session object also has functions that allow you to create named
+// contexts and to access them. A named context is a buffer area that can
+// be used to temporarily hold data and can be used as input to an action
+// or as the output from an action. Named contexts only exist during the
+// life of a transaction.
+
+session.name(&#39;myContext&#39;); // access the context named `myContext`
+session.createContext(&#39;myContext&#39;); // create a context named `myContext`
+
+// Contexts can be read into a Buffer, Buffers, or JSON object. Contexts
+// can be written using the write() method. For additional information on
+// the methods to read and write a context, see the Context object.
+</code></pre><h1 id="sprintf">Sprintf</h1>
+<p>This module is used to format strings using a printf syntax, you can access it with <code>require(&quot;sprintf&quot;)</code>.</p>
+<h2 id="javascript-sprintf-">JavaScript sprintf()</h2>
+<p>sprintf.js is a complete sprintf implementation.</p>
+<p>Its prototype is simple:</p>
+<pre><code>    string sprintf(string format , [mixed arg1 [, mixed arg2 [ ,...]]]);
+</code></pre><p>The placeholders in the format string are marked by &quot;%&quot; and are followed by one or more of these elements, in this order:</p>
+<ul>
+<li>An optional &quot;+&quot; sign that forces to preceed the result with a plus or minus sign on numeric values. By default, only the &quot;-&quot; sign is used on negative numbers.</li>
+<li>An optional padding specifier that says what character to use for padding (if specified). Possible values are 0 or any other character precedeed by a &#39;. The default is to pad with spaces.</li>
+<li>An optional &quot;-&quot; sign, that causes sprintf to left-align the result of this placeholder. The default is to right-align the result.</li>
+<li>An optional number, that says how many characters the result should have. If the value to be returned is shorter than this number, the result will be padded.</li>
+<li>An optional precision modifier, consisting of a &quot;.&quot; (dot) followed by a number, that says how many digits should be displayed for floating point numbers. When used on a string, it causes the result to be truncated.</li>
+<li>A type specifier that can be any of:<ul>
+<li>% b  print a literal &quot;%&quot; character</li>
+<li>b b  print an integer as a binary number</li>
+<li>c b  print an integer as the character with that ASCII value</li>
+<li>d b  print an integer as a signed decimal number</li>
+<li>i b  print an integer as a signed decimal number</li>
+<li>e b  print a float as scientific notation (lower-case)</li>
+<li>E b  print a float as scientific notation (upper-case)</li>
+<li>u b  print an integer as an unsigned decimal number</li>
+<li>f b  print a float as is</li>
+<li>o b  print an integer as an octal number</li>
+<li>O b  print the content of an Object</li>
+<li>s b  print a string as is (lower-case)</li>
+<li>S b  print a string as is (upper-case)</li>
+<li>x b  print an integer as a hexadecimal number (lower-case)</li>
+<li>X b  print an integer as a hexadecimal number (upper-case)</li>
+<li>j b  print an object with JSON stringify</li>
+</ul>
+</li>
+</ul>
+<h2 id="javascript-vsprintf-">JavaScript vsprintf()</h2>
+<p>vsprintf() is the same as sprintf() except that it accepts an array of arguments, rather than a variable number of arguments:</p>
+<pre><code>    vsprintf(&#39;The first 4 letters of the english alphabet are: %s, %s, %s and %s&#39;, [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]);
+</code></pre><h2 id="argument-swapping">Argument swapping</h2>
+<p>You can also swap the arguments. That is, the order of the placeholders doesn&#39;t have to match the order of the arguments. You can do that by simply indicating in the format string which arguments the placeholders refer to:</p>
+<pre><code>    sprintf(&#39;%2$s %3$s a %1$s&#39;, &#39;cracker&#39;, &#39;Polly&#39;, &#39;wants&#39;);
+</code></pre><p>And, of course, you can repeat the placeholders without having to increase the number of arguments.</p>
+<h2 id="how-to">How to</h2>
+<pre><code>    var sprintf = require(&quot;sprintf&quot;).sprintf;
+    var vsprintf = require(&quot;sprintf&quot;).vsprintf;
+
+    console.log(sprintf(&quot;%2$s %3$s a %1$s&quot;, &quot;cracker&quot;, &quot;Polly&quot;, &quot;wants&quot;));
+    console.log(vsprintf(&quot;The first 4 letters of the english alphabet are: %s, %s, %s and %s&quot;, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;]));
+</code></pre><h1 id="url">URL</h1>
+<p>This module has utilities for URL parsing. Call <code>require(&#39;url&#39;)</code> to use it.</p>
+<p>Parsed URL objects have some or all of the following fields, depending on
+whether or not they exist in the URL string. Any parts that are not in the URL
+string will not be in the parsed object. Examples are shown for the URL</p>
+<p><code>&#39;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&#39;</code></p>
+<ul>
+<li><p><code>href</code>: The full URL that was originally parsed. Both the protocol and host are lowercased.</p>
+<p>  Example: <code>&#39;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&#39;</code></p>
+</li>
+<li><p><code>protocol</code>: The request protocol, lowercased.</p>
+<p>  Example: <code>&#39;http:&#39;</code></p>
+</li>
+<li><p><code>host</code>: The full lowercased host portion of the URL, including port
+information.</p>
+<p>  Example: <code>&#39;host.com:8080&#39;</code></p>
+</li>
+<li><p><code>auth</code>: The authentication information portion of a URL.</p>
+<p>  Example: <code>&#39;user:pass&#39;</code></p>
+</li>
+<li><p><code>hostname</code>: Just the lowercased hostname portion of the host.</p>
+<p>  Example: <code>&#39;host.com&#39;</code></p>
+</li>
+<li><p><code>port</code>: The port number portion of the host.</p>
+<p>  Example: <code>&#39;8080&#39;</code></p>
+</li>
+<li><p><code>pathname</code>: The path section of the URL, that comes after the host and
+before the query, including the initial slash if present.</p>
+<p>  Example: <code>&#39;/p/a/t/h&#39;</code></p>
+</li>
+<li><p><code>search</code>: The &#39;query string&#39; portion of the URL, including the leading
+question mark.</p>
+<p>  Example: <code>&#39;?query=string&#39;</code></p>
+</li>
+<li><p><code>path</code>: Concatenation of <code>pathname</code> and <code>search</code>.</p>
+<p>  Example: <code>&#39;/p/a/t/h?query=string&#39;</code></p>
+</li>
+<li><p><code>query</code>: Either the &#39;params&#39; portion of the query string, or a
+querystring-parsed object.</p>
+<p>  Example: <code>&#39;query=string&#39;</code> or <code>{&#39;query&#39;:&#39;string&#39;}</code></p>
+</li>
+<li><p><code>hash</code>: The &#39;fragment&#39; portion of the URL including the pound-sign.</p>
+<p>  Example: <code>&#39;#hash&#39;</code></p>
+</li>
+</ul>
+<p>The following methods are provided by the URL module:</p>
+<h2 id="url-parse-urlstr-parsequerystring-slashesdenotehost-">url.parse(urlStr, [parseQueryString], [slashesDenoteHost])</h2>
+<p>Take a URL string, and return an object.</p>
+<p>Pass <code>true</code> as the second argument to also parse
+the query string using the <code>querystring</code> module.
+Defaults to <code>false</code>.</p>
+<p>Pass <code>true</code> as the third argument to treat <code>//foo/bar</code> as
+<code>{ host: &#39;foo&#39;, pathname: &#39;/bar&#39; }</code> rather than
+<code>{ pathname: &#39;//foo/bar&#39; }</code>. Defaults to <code>false</code>.</p>
+<h2 id="url-format-urlobj-">url.format(urlObj)</h2>
+<p>Take a parsed URL object, and return a formatted URL string.</p>
+<ul>
+<li><code>href</code> will be ignored.</li>
+<li><code>protocol</code>is treated the same with or without the trailing <code>:</code> (colon).<ul>
+<li>The protocols <code>http</code>, <code>https</code>, <code>ftp</code>, <code>gopher</code>, <code>file</code> will be
+postfixed with <code>://</code> (colon-slash-slash).</li>
+<li>All other protocols <code>mailto</code>, <code>xmpp</code>, <code>aim</code>, <code>sftp</code>, <code>foo</code>, etc will
+be postfixed with <code>:</code> (colon)</li>
+</ul>
+</li>
+<li><code>auth</code> will be used if present.</li>
+<li><code>hostname</code> will only be used if <code>host</code> is absent.</li>
+<li><code>port</code> will only be used if <code>host</code> is absent.</li>
+<li><code>host</code> will be used in place of <code>hostname</code> and <code>port</code></li>
+<li><code>pathname</code> is treated the same with or without the leading <code>/</code> (slash)</li>
+<li><code>search</code> will be used in place of <code>query</code></li>
+<li><code>query</code> (object; see <code>querystring</code>) will only be used if <code>search</code> is absent.</li>
+<li><code>search</code> is treated the same with or without the leading <code>?</code> (question mark)</li>
+<li><code>hash</code> is treated the same with or without the leading <code>#</code> (pound sign, anchor)</li>
+</ul>
+<h1 id="urlopen">urlopen</h1>
+<p>Use the urlopen module to send requests and receive responses in your GatewayScript Action.</p>
+<p>Access this module via the <code>require (&#39;urlopen&#39;)</code> statement. There are actually two objects
+involved within the urlopen. The first is the urlopen object which is used to initiate the
+request. The second is the <code>response</code> object that can be read just as though it were a context.</p>
+<p>Note that every urlopen transaction requires two instructions. The first is the initiation of
+the request via an open() function call. The second is the completion of the urlopen by invoking
+either a response.readAsXXX() method, a response.discard() method, or a response.disconnect()
+method. If there is no instructions invoking these three methods in urlopen open() function callback,
+an implicit disconnect() will be issued to complete the transaction.</p>
+<h2 id="methods-">Methods:</h2>
+<h2 id="-open-options-function-error-response-">.open(options, function(error, response) {})</h2>
+<p>Asynchronously send a request to a specified URL</p>
+<h2 id="-response-readasbuffer-function-error-buffer-">.response.readAsBuffer(function(error, buffer) {})</h2>
+<p>Read the response into a Buffer object</p>
+<h2 id="-response-readasbuffers-function-error-buffers-">.response.readAsBuffers(function(error, buffers) {})</h2>
+<p>Read the response into a Buffers object</p>
+<h2 id="response-readasjson-function-error-json-">response.readAsJSON(function(error, json) {})</h2>
+<p>Read the response into a JSON object</p>
+<h2 id="response-discard-function-error-">response.discard(function(error) {})</h2>
+<p>Discard the response. This method instructs the urlopen to consume but discard the bytes of the response message in an efficient manor. You may still access the header metadata from the response object.</p>
+<h2 id="response-disconnect-">response.disconnect()</h2>
+<p>Disconnect the connection without reading data from the response. This method is similar to discard, except it will disconnect the connection without possibly reading all of the response data from the network. This is the most efficient API, but can cause server side errors. You may still access the header metadata from the response.</p>
+<h2 id="-response-headers">.response.headers</h2>
+<p>Reads the entire collection of response headers into a JSON object.</p>
+<h2 id="-response-statuscode">.response.statusCode</h2>
+<p>Reads the status code from the urlopen response</p>
+<h2 id="-response-reasonphrase">.response.reasonPhrase</h2>
+<p>Reads the reason phrase from the urlopen response.</p>
+<p>The options object to the urlopen.open() method is as follows:
+The options object can be either a String or JSON object. If it is a JSON object, it describes
+the configurations used for establish an urlopen connection. Refer to the following code snippet
+showing the configurable options.</p>
+<pre><code>var options = {
+  // the target URL
+  target: &#39;http://example.com/test.xml&#39;,  
+  // get, delete, head, post, and put. case insensitive
+  method: &#39;POST&#39;,
+  // JSON object represents the HTTP(s) headers to be sent to the target
+  headers: {Accept: text/plain, Accept-Charset: utf-8 }, 
+  // the data content type
+  contentType: &#39;application/json&#39;, 
+  // timeout in seconds
+  timeout: 60, 
+  // Optional. SSL proxy profile defined in the datapower management store
+  sslProfile: &#39;sslProxyProfileName&#39;, 
+  // the data to be sent to the target when method is POST or PUT.
+  // for other method, data is ignored.
+  data: data, 
+};
+</code></pre><p>The data property can be any of the following:</p>
+<ul>
+<li>String: the string would be encoded as utf8 and send to the target</li>
+<li>Buffer or Buffers: the bytes in the buffer / buffers will be sent as is to the target</li>
+<li>All others (including object or primitive types, like Boolean): the data will be stringified
+as a JSON string (utf-8 encoded) and sent to the target</li>
+</ul>
+<p>If the options object is a String, it is considered to be a urlopen target URL. The method used is
+assumed to be an HTTP Get method.</p>
+<p>The following is an example of how to send an HTTPS Post request that uses the specified SSL Proxy
+Profile. It sends the payload containing &#39;Hello Datapower GatewayScript&#39;. It then checks for error
+and reads the response into a Buffer.</p>
+<pre><code>// use the urlopen module
+var urlopen = require (&#39;urlopen&#39;);
+
+// define the urlopen options
+var options = {
+    target: &#39;http://127.0.0.1:42410/echo&#39;,
+    // if target is https, supply a sslProxyProfile
+    // target: &#39;https://127.0.0.1:42409/echo&#39;,
+    // sslProxyProfile: &#39;alice-sslproxy-forward-trusted&#39;,
+    method: &#39;post&#39;,
+    headers: { &#39;X-My-Header1&#39; : &#39;value1&#39;, &#39;X-My-Header2&#39; : &#39;value2&#39; },
+    contentType: &#39;application/json&#39;,
+    timeout: 60,
+    data: &quot;Hello DataPower GatewayScript&quot;,
+};
+
+// open connection to target and send data over
+urlopen.open (options, function (error, response) {
+    if (error) {
+        // an error occurred during request sending or response header parsing
+        session.output.write (&quot;urlopen connect error: &quot; + JSON.stringify(error));
+    } else {
+        // read response data
+        // get the response status code
+        var responseStatusCode = response.statusCode;
+        if (responseStatusCode == 200) {
+            response.readAsBuffer(function(error, responseData) {
+                if (error) {
+                    // error while reading response or transferring data to Buffer
+                    session.output.write(&quot;readAsBuffer error: &quot; + JSON.stringify(error));
+                } else {
+                    session.output.write(responseData);
+                } 
+            });
+        } else {
+            session.output.write (&quot;urlopen target return statusCode &quot; + responseStatusCode);
+        }
+    }
+}); // end of urlopen.open()
+</code></pre><p>The following is another example of how to read local file system file via urlopen. For current release,
+user is only allowed to read file. In this example, urlopen reads local:///example.txt and writes it to
+output context.</p>
+<pre><code>// use the urlopen module
+var urlopen = require (&#39;urlopen&#39;);
+
+// define the urlopen options
+var options = {
+    target: &#39;local:///example.txt&#39;,
+    // method is optional. By default, method is get.
+    method: &#39;get&#39;,
+};
+
+// open connection to target
+urlopen.open (options, function (error, response) {
+    if (error) {
+        // an error occurred during reading the file
+        session.output.write (&quot;urlopen connect error: &quot; + JSON.stringify(error));
+    } else {
+        // read response data
+        // response.statusCode === 200: Successfully open file
+        // response.statusCode === 403: Permission denied (e.g. store:///dp is write only, cannot read)
+        // response.statusCode === 404: File not found
+        // response.statusCode === 500: Other open file error
+        var responseStatusCode = response.statusCode;
+        if (responseStatusCode == 200) {
+            response.readAsBuffer(function(error, responseData) {
+                if (error) {
+                    // error while reading response or transferring data to Buffer
+                    session.output.write(&quot;readAsBuffer error: &quot; + JSON.stringify(error));
+                } else {
+                    session.output.write(responseData);
+                } 
+            });
+        } else {
+            session.output.write (&quot;urlopen target return statusCode &quot; + responseStatusCode);
+        }
+    }
+}); // end of urlopen.open()
+</code></pre><p>If target file is not existed, response.statusCode returns 404. If target file users don&#39;t have permission 
+to access, response.statusCode returns 403.</p>
+<h1 id="util">util</h1>
+<p>These functions are in the module <code>&#39;util&#39;</code>. Use <code>require(&#39;util&#39;)</code> to
+access them.</p>
+<p>The <code>util</code> module provides some general purpose utilities.</p>
+<h2 id="util-format-format-">util.format(format, [...])</h2>
+<p>Returns a formatted string using the first argument as a <code>printf</code>-like format.</p>
+<p>The first argument is a string that contains zero or more <em>placeholders</em>.
+Each placeholder is replaced with the converted value from its corresponding
+argument. Supported placeholders are:</p>
+<ul>
+<li><code>%s</code> - String.</li>
+<li><code>%d</code> - Number (both integer and float).</li>
+<li><code>%j</code> - JSON.  Replaced with the string <code>&#39;[Circular]&#39;</code> if the argument<pre><code>   contains circular references.
+</code></pre></li>
+<li><code>%</code> - single percent sign (<code>&#39;%&#39;</code>). This does not consume an argument.</li>
+</ul>
+<p>If the placeholder does not have a corresponding argument, the placeholder is
+not replaced.</p>
+<pre><code>util.format(&#39;%s:%s&#39;, &#39;foo&#39;); // &#39;foo:%s&#39;
+</code></pre><p>If there are more arguments than placeholders, the extra arguments are
+converted to strings with <code>util.inspect()</code> and these strings are concatenated,
+delimited by a space.</p>
+<pre><code>util.format(&#39;%s:%s&#39;, &#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;); // &#39;foo:bar baz&#39;
+</code></pre><p>If the first argument is not a format string then <code>util.format()</code> returns
+a string that is the concatenation of all its arguments separated by spaces.
+Each argument is converted to a string with <code>util.inspect()</code>.</p>
+<pre><code>util.format(1, 2, 3); // &#39;1 2 3&#39;
+</code></pre><h2 id="util-inspect-object-options-">util.inspect(object, [options])</h2>
+<p>Return a string representation of <code>object</code>, which is useful for debugging.</p>
+<p>An optional <em>options</em> object may be passed that alters certain aspects of the
+formatted string:</p>
+<ul>
+<li><p><code>showHidden</code> - if <code>true</code> then the object&#39;s non-enumerable properties will be
+shown too. Defaults to <code>false</code>.</p>
+</li>
+<li><p><code>depth</code> - tells <code>inspect</code> how many times to recurse while formatting the
+object. This is useful for inspecting large complicated objects. Defaults to
+<code>2</code>. To make it recurse indefinitely pass <code>null</code>.</p>
+</li>
+<li><p><code>customInspect</code> - if <code>false</code>, then custom <code>inspect(depth, opts)</code> functions
+defined on the objects being inspected won&#39;t be called. Defaults to <code>true</code>.</p>
+</li>
+</ul>
+<p>Example of inspecting all properties of the <code>util</code> object:</p>
+<pre><code>var util = require(&#39;util&#39;);
+console.log(util.inspect(util, { showHidden: true, depth: null }));
+</code></pre><p>Values may supply their own custom <code>inspect(depth, opts)</code> functions, when
+called they receive the current depth in the recursive inspection, as well as
+the options object passed to <code>util.inspect()</code>.</p>
+<h3 id="custom-inspect-function-on-objects">Custom <code>inspect()</code> function on Objects</h3>
+<p>Objects also may define their own <code>inspect(depth)</code> function which <code>util.inspect()</code>
+will invoke and use the result of when inspecting the object:</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+var obj = { name: &#39;nate&#39; };
+obj.inspect = function(depth) {
+  return &#39;{&#39; + this.name + &#39;}&#39;;
+};
+
+util.inspect(obj);
+  // &quot;{nate}&quot;
+</code></pre><p>You may also return another Object entirely, and the returned String will be
+formatted according to the returned Object. This is similar to how
+<code>JSON.stringify()</code> works:</p>
+<pre><code>var obj = { foo: &#39;this will not show up in the inspect() output&#39; };
+obj.inspect = function(depth) {
+  return { bar: &#39;baz&#39; };
+};
+
+util.inspect(obj);
+  // &quot;{ bar: &#39;baz&#39; }&quot;
+</code></pre><h2 id="util-isarray-object-">util.isArray(object)</h2>
+<p>Returns <code>true</code> if the given &quot;object&quot; is an <code>Array</code>. <code>false</code> otherwise.</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+util.isArray([])
+  // true
+util.isArray(new Array)
+  // true
+util.isArray({})
+  // false
+</code></pre><h2 id="util-isregexp-object-">util.isRegExp(object)</h2>
+<p>Returns <code>true</code> if the given &quot;object&quot; is a <code>RegExp</code>. <code>false</code> otherwise.</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+util.isRegExp(/some regexp/)
+  // true
+util.isRegExp(new RegExp(&#39;another regexp&#39;))
+  // true
+util.isRegExp({})
+  // false
+</code></pre><h2 id="util-isdate-object-">util.isDate(object)</h2>
+<p>Returns <code>true</code> if the given &quot;object&quot; is a <code>Date</code>. <code>false</code> otherwise.</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+util.isDate(new Date())
+  // true
+util.isDate(Date())
+  // false (without &#39;new&#39; returns a String)
+util.isDate({})
+  // false
+</code></pre><h2 id="util-iserror-object-">util.isError(object)</h2>
+<p>Returns <code>true</code> if the given &quot;object&quot; is an <code>Error</code>. <code>false</code> otherwise.</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+util.isError(new Error())
+  // true
+util.isError(new TypeError())
+  // true
+util.isError({ name: &#39;Error&#39;, message: &#39;an error occurred&#39; })
+  // false
+</code></pre><h2 id="util-inherits-constructor-superconstructor-">util.inherits(constructor, superConstructor)</h2>
+<p>Inherit the prototype methods from one
+<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor">constructor</a>
+into another.  The prototype of <code>constructor</code> will be set to a new
+object created from <code>superConstructor</code>.</p>
+

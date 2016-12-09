@@ -1,0 +1,16 @@
+html, body {
+    height: 100%;
+}
+.fill {
+    height: 100%;
+}
+.fill90 {
+    height: 90%;
+}
+
+.fill70 {
+    height: 70%;
+}
+
+body { padding-top: 70px; }
+

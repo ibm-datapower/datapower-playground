@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html>
+<head>
+  <title>GatewayScript Fiddle</title>
+  <meta name="author" content="Tony Ffrench">
+  <link rel="stylesheet" type="text/css" href="third-party/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="third-party/css/prettify.css">
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <link rel="icon" type="image/ico" href="favicon.ico"/>
+</head>
+
+<body>
+  <div class="container fill">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+	      <div class="navbar-header">
+	        <button type="button" class="navbar-toggle" data-toggle="collapse"
+		              data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	        </button>
+	      </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a id="navBrand" name="navBrand"><b>DataPower Playground</b></a></li>
+            <li><a id="navExamples" name="navExamples">Samples</a></li>
+            <li><a id="navEdit" name="navEdit">Code</a></li>
+            <li><a id="navRequest" name="navRequest">Request</a></li>
+            <li><a id="navResponse" name="navResponse">Response <span class="badge"></span></a></li>
+            <li><a id="navLogs" href="#logs" name="navLogs">Log <span class="badge"></span></a></li>
+            <li><a id="navAPI" name="navAPI">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- Holder for example content -->
+
+    <div id="contentBrand" class="content">
+      <p>
+        Welcome to the IBM DataPower Playground.
+      </p>
+      <p>
+        The IBM DataPower Playground is an interactive website that lets you write GatewayScript code and execute it on a cloud hosted DataPower Gateway for learning purposes.
+      </p>      
+      <p>
+        GatewayScript is a new transformation technology for API, Web and Mobile and is available in DataPower as a <a href="http://pic.dhe.ibm.com/infocenter/wsdatap/v6r0m1/topic/com.ibm.dp.xi.doc/processingpolicies.html" target="_blank">Processing Policy Action</a> starting from firmware version 7.0. For more information see the <a href="http://www.ibm.com/support/knowledgecenter/SS9H2Y_7.0.0/com.ibm.dp.xg.doc/gatewayscript_development_reference.html" target="_blank">documentation</a>.
+      </p>
+      <p>
+	    <b>To get started click on the Samples tab.</b>
+      </p>
+    </div>
+
+    <div id="contentExamples" class="content">
+      <p>
+	The samples on this page are editable and testable, just click the Edit and Test button and follow the instructions on the next page. You will need to return to this section to complete each sample in turn. If you have questions about a specific API, use the API Reference tab for more detailed information on each API.
+      </p>
+    </div>
+    <!-- Holder for Orion editor and GatewayScript content -->
+
+    <div id="contentEdit" class="content fill">
+      <p>
+	The first time through a sample you'll most likely want to leave the script untouched. You can come back to the Code tab at any point, make some modifications and retest. When your done editing the code, click the Request tab to continue.</p>
+      <pre id="contentEditPre" class="fill90"></pre>
+    </div>
+    <!-- Holder for the request data and Orion text editor -->
+
+    <div id="contentRequest" class="content fill">
+      <p>
+	Use this panel to modify attributes of the request. Each sample populates attributes specific to that sample and you can always revert back to the original code and request details by re-clicking the "Edit and Test" button on the Samples tab. Clicking the green Test button below will transmit the request data and script data to DataPower for processing. Typically the script is static and stored on the DataPower encrypted flash and only the request data is required, but in this case we want to make it super easy to test variations to the scripts and therefore the script is transmitted along with the request data. The Log and Response tabs will be populated with the result.
+      </p>	    
+      <div>
+        <button id="contentRequestTest" class="btn btn-success">
+	  <span class="glyphicon glyphicon-play"></span> Test</button>
+      </div>
+      <div id="contentRequestStatus"></div>
+      <div class="panel-group" id="accordion">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+		HTTP Headers (click to expand)
+              </a>
+	    </h4>
+	  </div>
+	  <div id="collapseOne" class="panel-collapse collapse">
+	    <div class="panel-body">	      
+              <ul>
+		<li>
+		  X-GS-Fiddle-Rule: {request,response} selects the direction to execute
+		  the script from. This is very convenient for testing the response code and
+		  reason phrase API
+		</li>
+		<li>X-GS-Fiddle-Service: {mpgw, xmlfw) selects the service type</li>
+		<li>
+		  X-GS-Fiddle-Request-URI: {any uri} and X-GS-Fiddle-Backside:{ any URL }
+		  control which endpoint will be contacted with the request. Use this if
+		  you need a custom responder
+		</li>
+		<li>
+		  X-GS-Fiddle-Skip-Backside: {true,false} to skip contacting a backend
+		  turning the service into a loopback service
+		</li>
+	      </ul>
+	      <div id="requestHeader" class="form-inline">
+		<div class="form-group">
+		  <input id="requestHeaderKey" type="text"
+                         class="form-control" placeholder="Header name">
+		</div>
+		<div class="form-group">
+		  <input id="requestHeaderValue" type="text"
+			 class="form-control" placeholder="Header value">
+		</div>
+		<button class="btn btn-default" type="button">Add/Modify</button>
+		<button class="btn btn-default" type="button">Remove</button>
+	      </div>
+	      <table class="table table-striped table-bordered table-condensed">
+		<thead>
+		  <tr>
+		    <th>Header Name</th>
+		    <th>Header Value</th>
+		  </tr>
+		</thead>
+		<tbody id="requestHeaders"></tbody>
+	      </table>	      
+	    </div>
+	  </div>
+	</div>
+      </div>     
+     <pre id="contentRequestPre" class="fill70" ></pre>
+    </div><!-- Holder for the response (readonly) -->
+
+    <div id="contentResponse" class="content fill">
+      <p>This screen contains the result of executing the input
+      against the script you provided. If an error occurred the
+      Log tab will have further information.</p>
+      <pre id="contentResponsePre"></pre>
+    </div><!-- Holder for the log panel -->
+
+    <div id="contentLogs" class="content fill">
+      <p>
+This page contains the DataPower transaction logs specific to the request you just submitted. The logs are grabbed from the <a href="http://pic.dhe.ibm.com/infocenter/wsdatap/v6r0m1/topic/com.ibm.dp.xi.doc/logging_logfiles.html" target="_blank">DataPower System Log</a> and redisplayed here for convenience.
+      </p>
+      <pre id="contentLogsPre"></pre>
+    </div>
+
+    <div id="contentAPI" class="content fill">
+      <div id="contentAPI_load"></div>
+      <br><br><br><br><br><br><br><br>
+      ======================================
+      <p>
+	<b>Credits, Tributes, and Copyrights</b>
+      </p>
+      <p>
+	The IBM license agreement and any applicable information on the web download page for IBM products refers Licensee to this file for details concerning notices applicable to code included in the products listed ("the Program").
+      </p>
+      <p>
+	Notwithstanding the terms and conditions of any other agreement Licensee may have with IBM or any of its related or affiliated entities (collectively "IBM"), the third party code identified below is subject to the terms and conditions of the IBM license agreement for the Program and not the license terms that may be contained in the notices below. The notices are provided for informational purposes.
+      </p>
+      <p>
+	IMPORTANT: IBM does not represent or warrant that the information in this NOTICES file is accurate. Third party websites are independent of IBM and IBM does not represent or warrant that the information on any third party website referenced in this NOTICES file is accurate. IBM disclaims any and all liability for errors and omissions or for any damages accruing from the use of this NOTICES file or its contents, including without limitation URLs or references to any third party websites.
+      </p>
+      <p>
+	The following modules and associated documentation were derived from works of Joyent, Inc. and other Node contributors: Assert, Buffer, Console, Punycode, Querystring, Url, and Util. The Buffers module and documentation were derived from works of the node-buffers module. The CommonJS API for Modules 1.0 was implemented based the specifications at www.commonjs.org. <a href="license.txt">thirdparty license details</a>
+      </p>
+    </div>
+<!--    <div id="contentAbout" class="content fill"></div> -->
+
+  </div>
+  <script src="third-party/js/jquery.js" type="text/javascript"></script>
+  <script src="third-party/js/bootstrap.js" type="text/javascript"></script>
+  <script src="third-party/js/ace.js" type="text/javascript"></script>
+  <script src="third-party/js/prettify.js" type="text/javascript"></script>
+  <script src="index.js" type="text/javascript"></script>
+</body>
+</html>

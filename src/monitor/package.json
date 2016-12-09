@@ -1,0 +1,14 @@
+{
+  "name": "monitor",
+  "version": "1.0.0",
+  "description": "Monitor the service uptime and email when its not available",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "emailjs": "^1.0.8",
+    "express": "^4.14.0",
+    "supertest": "^2.0.1"
+  }
+}

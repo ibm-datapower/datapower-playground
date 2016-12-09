@@ -1,0 +1,315 @@
+<p>
+  IBM GatewayScript (TM) is a secure JavaScript based programing
+  model for Web and Mobile and will be available in DataPower
+  as a Processing Policy Action starting from firmware version 7.0.
+</p>
+<p>
+  The GatewayScript Impact Lab Web Application is provided to accelerate
+  the learning process so that you can get familiar with GatewayScript
+  before delving into the configuration details of DataPower for which
+  you may or may not be familiar with. The second half of the lab will
+  demonstrate the configuration details needed to use this new and exciting
+  feature.
+</p>
+<p>
+  GatewayScript APIs are designed to be familiar and friendly and unlike
+  an application server the context of execution only lasts for the duration
+  of the DataPower Processing Policy action. The exercises on this page
+  are editable and testable, just click the Edit and Test button and
+  follow the instructions on the next page. Return to this page to continue
+  to the next exercises.
+</p>
+
+
+<div class="page-header">
+  <h4>Exercise 1: Hello GatewayScript</h4>
+  <p>
+    This simple exercise will help you get familiar with the environment
+    and log the customary "Hello World" message to both the DataPower system
+    log and write the same message string as transactional data.
+  </P>
+  <pre class="prettyprint lang-js">
+    // Log to the DataPower logging system the following message
+    console.info("Hello GatewayScript!!");
+    
+    // Write the same message as transactional data
+    session.output.write("Hello GatewayScript!!");</pre>
+  <a class="editExample btn btn-primary">Edit and Test</a>
+</div>
+
+<div class="page-header">
+  <h4>Exercise 2: Logging to the DataPower logging system</h4>
+  <p>
+    Writing to the system log has never been easier. Simply pass an object to the console object using
+    the method that describes the severity of the message. Whether the log message is logged and
+    where this log message is logged to depends on the DataPower log target configuration. For example
+    each of the log messages below could be transmitted by syslog to a centralized off-box log
+    management solution.
+  </P>
+  <pre class="prettyprint lang-js">
+    console.info("Starting Console Demo");
+    
+    // Print a json variable directly to the log at error level
+    var jsonObject = {'myLabel' : 'myValue'};
+    console.info(jsonObject); 
+    
+    // Print a number to the log at alert level using C style formatting
+    var numberObject = 1234;
+    console.alert("The magic number is: %d", numberObject); 
+    
+    // Print a value using positional parameters (1$ receives first parm
+    // 2$ receives second parm).  Note that in the example the stringObject
+    // is %2$s since it is the second object after the format string.
+    var boolObject = true;
+    var stringObject = "This message was placed here by GatewayScript!";
+    console.emerg("%2$s It is %1$s!", boolObject, stringObject);
+    
+    // The following log levels are provided
+    console.debug("debug");
+    console.info("info");
+    console.notice("notice");
+    console.warn("warn");
+    console.error("error");
+    console.critical("critical");
+    console.alert("alert");
+    console.emerg("emerg");
+    console.log("log/info")
+    console.trace("trace/debug");
+    
+// Advanced printf style formatting is supported
+console.log ("%1$b %1$c %1$i %1$d %1$e %1$E %1$f %1$o %2$O %2$s %2$S %1$u %1$x %1$X %2$j", 1234, "abcd");
+
+console.info("Console Demo Complete");
+session.output.write("Console - Successful Completion");</pre>
+	<a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+      <div class="page-header">
+        <h4>Exercise 3: Using the GatewayScript CLI Debugger</h4>
+	<p>
+	  In this excercise we will demonstrate how to invoke the CLI debugger. To use the 
+	  debugger, you need to enable debug either for the
+	  specific action, or for the service (will include
+	  all actions running in that service). And you must
+	  have a "debugger;" statement in your code.  The
+	  "debugger;" statement serves as the initial breakpoint.
+	</P>
+        <pre class="prettyprint lang-js">
+console.error ("Starting Debugger Exercise");
+
+debugger; // Initial break point.  Only has an affect
+          // if debugging is enabled on action or service.
+
+var foo = function(loop) {
+    var i=0;
+    if (loop){
+        for (i=0; i&lt;loop; i++){
+            console.error("Iteration number: %d", i);
+        }
+    }
+}
+
+var jsonObj = {'loopCount': 3};
+
+foo(jsonObj.loopCount);
+
+console.info("Debugger Demo Complete");
+session.output.write("Debugger - Successful Completion\n");</pre>
+	<a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+      <div class="page-header">
+        <h4>Exercise 4: Reading and Writing a message payload</h4>
+	<p>
+	  In this excercise you'll learn how read the payload
+	  of a message recieved either as the request or response in
+	  a oonversation between the client and server.
+
+
+	  In the following script, we read the 'input' context which
+	  holds the body of the request in our MultiProtocol Gateway.
+	  We first read it as a buffer (binary data), and then we read it as a 
+	  JSON object.  Both reads are written to the System Log.
+	  The JSON object is then modified by conditionally adding 
+	  a new property to it.  The resulting object is written
+	  to the 'output' context of the action. This becomes the
+	  body of the response that is returned to the client.
+
+	  Also, note that the readAsBuffer() and readAsJSON() are
+	  asynchronous function calls. The anonymous function in
+	  the body of these calls is called back when the read is
+	  complete. In the mean time, the flow continues, so in this 
+	  case the write to the system log that states "not done yet..."
+	  executes before the read completes. The GatewayScript action
+	  will not conclude until all work in the script has finished.
+	</P>
+        <pre class="prettyprint lang-js">
+console.info ("Starting Read/Write Payload Demo");
+
+session.input.readAsBuffer(function (error, bufferObject) {
+    // Asynchronous callback when request payload is received
+    // If an error occurs, the error object will be populated.
+    // A Buffer object holds binary data.
+    if (error){
+        console.error("readAsBuffer() failure: %s", error);
+    }
+    else {
+        console.info("readAsBuffer() success: %s", bufferObject);
+        session.input.readAsJSON(function (error, jsonObject) {
+           // Asynchronous callback when request payload is received
+           // The JSON object is parsed during the read.
+
+           // If an error occurs, the error object will be populated.
+           // Throw the error to the Processing Policy handling. If
+           // an error rule is matched it will be executed. Also see
+           // OnError action for more fine grained control.
+           if (error) throw error;
+
+           // Write the output to the 'output' context.  This
+           // is creating a new body in the flow
+           session.output.write(jsonObject);
+
+           console.info("readAsJSON success: %s", jsonObject);
+           console.info("Read/Write Payload Demo Complete");
+     
+        });
+    }
+});
+
+console.info ("Read/Write Payload Demo not done yet...");</pre>
+	<a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+      <div class="page-header">
+        <h4>Exercise 5: Reading and Writing headers</h4>
+	<p>
+	  Shows how to read the headers of a received request.
+	  In the following script, we read the original headers
+	  those that are received off the wire.  And we read the
+	  current headers the current collection of headers after
+	  being modified by previous actions.
+	</p>
+	<p>
+	  The headers can be retrieved as a single object, or they
+	  can be retrieved individually.
+	</p>
+	  The headers are dumped to the System log.
+	<p>
+	  Finally, the statusCode and reasonPhrase are modified
+	  to return a 203 status code with a custom reason phrase.
+	</P>
+        <pre class="prettyprint lang-js">
+console.info ("Starting Read/Write Header Demo");
+
+// Load the header-metadata API
+var hm = require('header-metadata');
+
+// Retrieve the current collection of headers
+console.info("Original Headers: %j", hm.original.headers);
+
+// Retrieve the current collection of headers
+console.info("Current headers: %j", hm.current.headers);
+
+// read a specific header with case insensitive name
+console.info("Content-Type is: " + hm.current.get("content-type"));
+
+// Set single header. Sets X-new-header to a value of myHeaderValue.
+hm.response.set('X-new-header', 'myHeaderValue');
+
+// Retrieve the current collection of response headers.
+// Note that these are merged with DataPower headers to
+// ensure a valid HTTP response.
+console.info("Response headers: %j", hm.response.headers);
+
+hm.response.statusCode = "203 Overriding the reasonPhrase";
+
+console.info("Read/Write Header Demo Complete");</pre>
+	<a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+
+      <div class="page-header">
+        <h4>Exercise N:</h4>
+	<p>
+	  Description
+
+	</P>
+        <pre class="prettyprint lang-js">
+</pre>
+	<a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+
+
+
+
+
+      <div class="page-header">
+        <h4>Reading and writing JSON Processing Policy Contex data</h4>
+        <pre class="prettyprint lang-js">
+// session.input refers to the local input context to the current
+// processing policy action. uppercase INPUT refers to the original input
+// or to the processing policy INPUT context.
+session.input.readAsJSON (function (err, json) {
+
+// All asynchronous functions have the ability to handle errors locally
+// and can be thrown to the Processing Policy error handling, on error
+// actions and for error rule processing
+if (err) throw err;
+  
+// Log the JSON parsed input directly to the system log
+console.log (json);
+  
+// session.output refers to the local output context of the current
+// action this could either be a named context or the OUTPUT context 
+// which will transmit this result to the backend endpoint
+session.output.write (json);
+});
+	</pre><a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+      <div class="page-header">
+        <h4>Reading and writing Binary Processing Policy Context</h4>
+        <pre class="prettyprint lang-js">
+// readAsBuffer consumes the local input context as a Buffer object. The
+// buffer object is an efficient storage and manipulation API for binary
+// content. We have attempted to maintain compatibility with node.js's
+// Buffer object (http://nodejs.org/api/buffer.html)
+session.input.readAsBuffer (function (err, buff) {
+
+// Will log the integer value of each byte. This is the default
+// format because buffer is designed for any arbitrary binary content
+// &lt;Buffer 7b 20 72 65 71 75 65 73 7 . &gt;
+console.log (buff);
+
+// Converts the buffer to a utf-8 string and logs
+// { request: "Enter request data here" }
+console.log (buff.toString());
+
+// Same as above, but uses the console type conversion specifier
+console.log ('Buffer to string: %s', buff);
+
+// Output the buffer object to the local output context. We attempt
+// use Copy-On-Write and Zero-Copy as much as technically possible.
+// This is a zero-copy operation as no modification to the buffer was
+// made
+session.output.write (buff);
+});
+	</pre><a class="editExample btn btn-primary">Edit and Test</a>
+      </div>
+
+      <div class="page-header">
+        <h4>Header API</h4>
+        <pre class="prettyprint lang-js">
+var hm = require('header-metadata'),
+    ct = hm.current.get('content-type');
+
+console.log ('Current headers as a JSON object ' + hm.current.headers);
+console.log ('Current Content-Type header ' + ct);
+
+// If the content is JSON print a message to the system log
+if (hm.current.isContentType('application/json')) {
+    console.log ('Content of the incomming message is ' + ct)
+}
+	</pre><a class="editExample btn btn-primary">Edit and Test</a>
+      </div>

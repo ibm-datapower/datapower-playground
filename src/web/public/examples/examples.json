@@ -1,0 +1,12 @@
+[
+"demo-hello-gatewayscript.js",
+"demo-console.js",
+"demo-payload.js",
+"demo-headers.js",
+"demo-service-metadata.js",
+"demo-urlopen-1.js",
+"demo-urlopen-2.js",
+"demo-urlopen-3.js",
+"demo-context.js",
+"demo-ratelimit.js"
+]
