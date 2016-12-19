@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.service.type: nodeport
+  creationTimestamp: null
+  name: web
+spec:
+  replicas: 2
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: web
+    spec:
+      containers:
+      - env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        image: datapower-playground/web:1.0.0
+        name: web
+        ports:
+        - containerPort: 6001
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+status: {}

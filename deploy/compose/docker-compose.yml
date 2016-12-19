@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  web:
+    build: ../../src/web
+    image: datapower-playground/web:1.0.0
+    restart: always
+    ports:
+      - "6001:6001"
+    environment:
+      - GET_HOSTS_FROM=dns
+    labels:
+      - kompose.service.type=nodeport
+
+  monitor:
+    build: ../../src/monitor
+    image: datapower-playground/monitor:1.0.0
+    restart: always
+    links:
+      - "web"
+    environment:
+      - GET_HOSTS_FROM=dns
+#     - MONITOR_EMAIL_SERVER_USER=user@gmail.com
+#     - MONITOR_EMAIL_SERVER_PASSWORD=password
+#     - MONITOR_EMAIL_SERVER_HOST=smtp.gmail.com
+
+  datapower:
+    build: ../../src/datapower
+    image: datapower-playground/datapower:1.0.0
+    restart: always
+    ports:
+      - "8080:8080"
