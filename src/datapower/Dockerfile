@@ -3,7 +3,8 @@ FROM ibmcom/datapower:latest
 MAINTAINER tonyffrench
 
 ENV  DATAPOWER_ACCEPT_LICENSE=true \
-     DATAPOWER_INTERACTIVE=true
+     DATAPOWER_INTERACTIVE=true \
+     DATAPOWER_FAST_STARTUP=true
 
 COPY . /drouter
 
